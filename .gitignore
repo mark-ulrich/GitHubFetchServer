@@ -1,2 +1,5 @@
 .vscode
 *.exe
+out
+__debug_bin
+*.js
