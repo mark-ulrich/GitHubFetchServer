@@ -1,0 +1,43 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 1rem;
+  font-family: sans-serif;
+}
+
+h2 {
+  margin-bottom: 0.5rem;
+}
+
+#update-repo-form {
+  padding: 1rem;
+}
+
+input,
+label {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+input {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.error {
+  display: none;
+  color: #ff0000;
+  margin: 0;
+  font-size: 0.85rem;
+  font-family: serif;
+  padding: 0.4rem;
+}
+
+.repo-name {
+  display: inline;
+  font-family: monospace;
+  font-size: 1.3rem;
+}
