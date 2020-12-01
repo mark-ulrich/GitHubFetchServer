@@ -11,7 +11,7 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 
 	// We must have a valid repo selected
 	if appState.CurrentRepo == nil {
-		http.Redirect(w, r, UpdateRepoHandlerPath, http.StatusTemporaryRedirect)
+		http.Redirect(w, r, UpdateRepoInfoRoutePath, http.StatusTemporaryRedirect)
 	}
 
 	pageTemplate, err := template.ParseFiles("../html/layout.gohtml")

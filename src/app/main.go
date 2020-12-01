@@ -19,9 +19,14 @@ type AppState struct {
 }
 
 const (
-	UpdateRepoHandlerPath = "/update-repo"
-	UpdateRepoPath        = "/repo"
-	UpdateUserPath        = "/user"
+	ListRoutePath           = "/list/"
+	ListOverviewRoutePath   = "/list/overview"
+	ListBugsRoutePath       = "/list/bugs"
+	ListMilestonesRoutePath = "/list/milestones"
+	ListUsersRoutePath      = "/list/users"
+	UpdateRepoInfoRoutePath = "/update-repo"
+	UpdateRepoRoutePath     = "/repo"
+	UpdateUserRoutePath     = "/user"
 )
 
 var (
@@ -34,11 +39,25 @@ func main() {
 	fileServer := http.FileServer(http.Dir("../html/"))
 	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
 
-	// Set up routes
+	// ===============================================
+	//									Routes
+	// ===============================================
+
 	http.HandleFunc("/", rootHandler)
-	http.HandleFunc(UpdateRepoHandlerPath, updateRepoInfoHandler)
-	http.HandleFunc(UpdateUserPath, updateUserHandler)
-	http.HandleFunc(UpdateRepoPath, updateRepoHandler)
+
+	// Update user and repo
+	http.HandleFunc(UpdateRepoInfoRoutePath, updateRepoInfoHandler)
+	http.HandleFunc(UpdateUserRoutePath, updateUserHandler)
+	http.HandleFunc(UpdateRepoRoutePath, updateRepoHandler)
+
+	// List repo info
+	http.HandleFunc(ListRoutePath, func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, ListOverviewRoutePath, http.StatusMovedPermanently)
+	})
+	http.HandleFunc(ListOverviewRoutePath, listOverviewHandler)
+	http.HandleFunc(ListBugsRoutePath, listBugsHandler)
+	http.HandleFunc(ListMilestonesRoutePath, listMilestonesHandler)
+	http.HandleFunc(ListUsersRoutePath, listUsersHandler)
 
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
 }
