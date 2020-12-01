@@ -3,3 +3,5 @@
 out
 __debug_bin
 *.js
+TODO.md
+go.sum
