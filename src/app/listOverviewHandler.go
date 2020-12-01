@@ -7,6 +7,12 @@ import (
 )
 
 func listOverviewHandler(w http.ResponseWriter, r *http.Request) {
+
+	// We must have a valid repo selected
+	if appState.CurrentRepo == nil {
+		http.Redirect(w, r, UpdateRepoInfoRoutePath, http.StatusTemporaryRedirect)
+	}
+
 	if r.Method != "GET" {
 		processBadRequest(w)
 		return

@@ -43,7 +43,10 @@ func main() {
 	//									Routes
 	// ===============================================
 
-	http.HandleFunc("/", rootHandler)
+	// Root handler
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/list/overview", http.StatusMovedPermanently)
+	})
 
 	// Update user and repo
 	http.HandleFunc(UpdateRepoInfoRoutePath, updateRepoInfoHandler)
