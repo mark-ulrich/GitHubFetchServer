@@ -1,7 +1,6 @@
 package main
 
 import (
-	"html/template"
 	"log"
 	"net/http"
 )
@@ -13,11 +12,7 @@ func listBugsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	appState.Title = "Bugs"
-	pageTemplate, err := template.ParseFiles("../html/layout.gohtml", "../html/listBugs.gohtml")
-	if err != nil {
-		log.Fatal(err)
-	}
-	if err = pageTemplate.Execute(w, appState); err != nil {
+	if err = mainTemplate.ExecuteTemplate(w, "listBugs", appState); err != nil {
 		log.Fatal(err)
 	}
 }

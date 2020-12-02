@@ -5,6 +5,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"text/template"
 )
 
 type PageInfo struct {
@@ -19,6 +20,11 @@ type AppState struct {
 }
 
 const (
+	templatePath = "../templates/"
+)
+
+// Route paths
+const (
 	ListRoutePath           = "/list/"
 	ListOverviewRoutePath   = "/list/overview"
 	ListBugsRoutePath       = "/list/bugs"
@@ -30,13 +36,17 @@ const (
 )
 
 var (
-	appState AppState
+	appState     AppState
+	mainTemplate *template.Template
+	err          error
 )
 
 func main() {
 
+	loadTemplates()
+
 	// Serve static assets
-	fileServer := http.FileServer(http.Dir("../html/"))
+	fileServer := http.FileServer(http.Dir("../static/"))
 	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
 
 	// ===============================================
@@ -63,4 +73,11 @@ func main() {
 	http.HandleFunc(ListUsersRoutePath, listUsersHandler)
 
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
+}
+
+func loadTemplates() {
+	mainTemplate, err = template.ParseGlob(templatePath + "*.gohtml")
+	if err != nil {
+		panic(err)
+	}
 }

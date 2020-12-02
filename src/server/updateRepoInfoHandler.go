@@ -1,8 +1,6 @@
 package main
 
 import (
-	"html/template"
-	"log"
 	"net/http"
 )
 
@@ -19,12 +17,7 @@ func updateRepoInfoHandler(w http.ResponseWriter, r *http.Request) {
 	appState.Request = r
 	appState.Title = "Select Repository"
 
-	pageTemplate, err := template.ParseFiles("../html/layout.gohtml", "../html/updateRepo.gohtml")
-	if err != nil {
-		log.Println(err)
-	}
-	err = pageTemplate.Execute(w, appState)
-	if err != nil {
-		log.Println(err)
+	if err := mainTemplate.ExecuteTemplate(w, "updateRepo", appState); err != nil {
+		panic(err)
 	}
 }

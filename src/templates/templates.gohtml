@@ -1,0 +1,100 @@
+{{/* What a mess... There has to be a better and more intuitive way to
+     organize golang templates... */}}
+
+{{ define "begin" }}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <title>GitHub Fetch Server - {{ .Title }}</title>
+  </head>
+  <body>
+{{ end }}
+
+{{ define "end" }}
+    <script type="text/javascript" src="/static/js/main.js"></script>
+  </body>
+</html>
+{{ end }}
+
+{{ define "updateRepo" }}
+{{ template "begin" . }}
+{{ if eq .Request.Method "GET" }}
+<h2>Select GitHub Repository</h2>
+<form id="update-repo-form" method="POST">
+  <label for="username-input">Username:</label>
+  <input
+    id="username-input"
+    name="username"
+    placeholder="GitHub username"
+  /><br />
+  <div class="error" id="username-error"><p>Username not found</p></div>
+  <label for="repo-name-input">Repository:</label>
+  <input
+    id="repo-name-input"
+    name="repo-name"
+    placeholder="Repository name"
+  /><br />
+  <div class="error" id="repo-name-error"><p>Repository not found</p></div>
+  <button id="update-button" type="submit">Update</button>
+</form>
+<script type="text/javascript" src="/static/js/updateRepo.js"></script>
+{{ else if eq .Request.Method "POST" }}
+<h2>Updated Repo</h2>
+<p>
+  Using repo:
+  <span class="repo-name">{{.CurrentRepo.Owner.Login}}/{{.CurrentRepo.Name}}</span>
+</p>
+<p><span id="redirect-counter"></span></p>
+<a href="/">Go Back</a>
+<script type="text/javascript">
+  window.onload = function() {
+    redirect(5, "/", "#redirect-counter");
+  }
+</script>
+{{ else }}
+<h1>NO BUENO</h1>
+{{ end }}
+{{ template "end" }}
+{{ end }}
+
+{{ define "navLinks" }}
+<a class="nav-link" href="/list/overview">Overview</a> | 
+<a class="nav-link" href="/list/bugs">Bugs</a> | 
+<a class="nav-link" href="/list/milestones">Milestones</a> | 
+<a class="nav-link" href="/list/users">Users</a> 
+{{ end }}
+
+{{ define "listHeader" }}
+<h2>{{ .Title }}</h2>
+<div class="list-header-repo">
+<h4>Repo: <span class="repo-name">{{ .CurrentRepo.Owner.Login }}/{{ .CurrentRepo.Name }}</span></h4>
+</div>
+{{ template "navLinks" }}
+{{ end }}
+
+{{ define "listOverview" }}
+{{ template "begin" . }}
+{{ template "listHeader" . }}
+{{ template "end" }}
+{{ end }}
+
+{{ define "listBugs" }}
+{{ template "begin" . }}
+{{ template "listHeader" . }}
+{{ template "end" }}
+{{ end }}
+
+{{ define "listMilestones" }}
+{{ template "begin" . }}
+{{ template "listHeader" . }}
+{{ template "end" }}
+{{ end }}
+
+{{ define "listUsers" }}
+{{ template "begin" . }}
+{{ template "listHeader" . }}
+{{ template "end" }}
+{{ end }}
