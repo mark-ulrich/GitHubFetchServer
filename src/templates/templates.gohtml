@@ -70,7 +70,7 @@
 {{ define "listHeader" }}
 <h2>{{ .Title }}</h2>
 <div class="list-header-repo">
-<h4>Repo: <span class="repo-name">{{ .CurrentRepo.Owner.Login }}/{{ .CurrentRepo.Name }}</span></h4>
+<h4>Repo: <span class="repo-name"><a href="{{ .CurrentRepo.HTMLURL }}" target="_blank">{{ .CurrentRepo.Owner.Login }}/{{ .CurrentRepo.Name }}</a></span></h4>
 </div>
 {{ template "navLinks" }}
 {{ end }}
@@ -78,23 +78,43 @@
 {{ define "listOverview" }}
 {{ template "begin" . }}
 {{ template "listHeader" . }}
+<list class="overview-list">
+<li>Total Bugs: {{ .CurrentRepo.BugCount }}</li>
+<li>Total Milestones: </li>
+<li>Total Users: </li>
+</list>
 {{ template "end" }}
 {{ end }}
 
 {{ define "listBugs" }}
 {{ template "begin" . }}
 {{ template "listHeader" . }}
+<table>
+  {{ range .CurrentRepo.Bugs -}}
+  <tr><td>{{.Title}}</td></tr>
+  {{ end }}
+</table>
 {{ template "end" }}
 {{ end }}
 
 {{ define "listMilestones" }}
 {{ template "begin" . }}
 {{ template "listHeader" . }}
+<table>
+  {{ range .CurrentRepo.Bugs -}}
+  <tr><td>{{.Title}}</td></tr>
+  {{ end }}
+</table>
 {{ template "end" }}
 {{ end }}
 
 {{ define "listUsers" }}
 {{ template "begin" . }}
 {{ template "listHeader" . }}
+<table>
+  {{ range .CurrentRepo.Bugs -}}
+  <tr><td>{{.Title}}</td></tr>
+  {{ end }}
+</table>
 {{ template "end" }}
 {{ end }}

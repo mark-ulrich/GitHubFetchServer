@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -22,5 +23,10 @@ func listOverviewHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err = mainTemplate.ExecuteTemplate(w, "listOverview", appState); err != nil {
 		log.Fatal(err)
+	}
+
+	// TODO: REMOVE
+	for _, bug := range appState.CurrentRepo.Bugs {
+		fmt.Println(bug.Title)
 	}
 }

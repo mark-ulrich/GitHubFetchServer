@@ -7,9 +7,22 @@ import (
 )
 
 type Repository struct {
-	Name  string
-	ID    int
-	Owner *User
+	Name     string
+	ID       int
+	Owner    *User
+	HTMLURL  string `json:"html_url"`
+	Issues   *[]Issue
+	Bugs     []Issue
+	BugCount int
+}
+
+type Issue struct {
+	Title  string
+	Labels *[]Label
+}
+
+type Label struct {
+	Name string
 }
 
 func updateRepoHandler(w http.ResponseWriter, r *http.Request) {
@@ -46,11 +59,12 @@ func updateRepoHandler(w http.ResponseWriter, r *http.Request) {
 	for i, repo := range *currentUser.Repos {
 		if repo.Name == repoName {
 			appState.CurrentRepo = &(*currentUser.Repos)[i]
+			fetchIssues(appState.CurrentRepo)
+			fetchBugs(appState.CurrentRepo)
 			return
 		}
 	}
 
 	// Not found
 	w.WriteHeader(http.StatusNotFound)
-
 }

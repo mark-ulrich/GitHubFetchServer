@@ -24,7 +24,8 @@ func stringInSlice(slice []string, s string) bool {
 
 // Fetch a list of repositories for a given GitHub username
 func fetchRepos(username string) (repos *[]Repository, err error) {
-	resp, err := http.Get("https://api.github.com/users/mark-ulrich/repos?per_page=100000")
+	url := fmt.Sprintf("https://api.github.com/users/%s/repos?per_page=100000", username)
+	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
 	}
@@ -34,4 +35,42 @@ func fetchRepos(username string) (repos *[]Repository, err error) {
 
 	err = json.NewDecoder(resp.Body).Decode(&repos)
 	return repos, err
+}
+
+func fetchBugs(repo *Repository) {
+	if repo.Issues == nil {
+		fetchIssues(repo)
+	}
+
+	for i, issue := range *repo.Issues {
+		fmt.Println("BUG:", issue.Title)
+		for _, label := range *issue.Labels {
+			if label.Name == "bug" {
+				repo.Bugs = append(repo.Bugs, (*repo.Issues)[i])
+				repo.BugCount++
+				break
+			}
+		}
+	}
+}
+
+func fetchIssues(repo *Repository) {
+	url := fmt.Sprintf(
+		"https://api.github.com/repos/%s/%s/issues?per_page=1000000",
+		repo.Owner.Login,
+		repo.Name,
+	)
+	resp, err := http.Get(url)
+	if err != nil {
+		panic(err)
+	}
+	if resp.StatusCode != http.StatusOK {
+		panic(fmt.Errorf("Failed to fetch issues from %s", url))
+	}
+	defer resp.Body.Close()
+
+	if err := json.NewDecoder(resp.Body).Decode(&repo.Issues); err != nil {
+		panic(err)
+	}
+	fmt.Println(len(*repo.Issues))
 }
